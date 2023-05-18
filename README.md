@@ -8,4 +8,4 @@ This projects pretends to be a npm package to create a folder structure for a no
 
 [Manuel Ortigoza]: https://github.com/doggbmx/
 [Manuel Castelnovo]: https://github.com/manucastelnovo/
-[Manuel Ortigoza]: https://github.com/santiracca/
+[Santiago Racca]: https://github.com/santiracca/
