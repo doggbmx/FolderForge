@@ -1,0 +1,26 @@
+{
+  "name": "folderforge",
+  "version": "1.0.0",
+  "description": "Creates a folder structure for a node typescript server implementing clean architecture",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doggbmx/FolderForge.git"
+  },
+  "keywords": [
+    "template",
+    "node",
+    "server",
+    "typescript",
+    "cleanarchitecture"
+  ],
+  "author": "doggbmx, manucastelnovo, santiracca",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doggbmx/FolderForge/issues"
+  },
+  "homepage": "https://github.com/doggbmx/FolderForge#readme"
+}

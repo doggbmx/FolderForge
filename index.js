@@ -176,5 +176,7 @@ function index() {
   });
 }
 
-setup();
-index();
+function execute() {
+  setup();
+  index();
+}
