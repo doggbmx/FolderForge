@@ -6,6 +6,9 @@ This projects pretends to be a npm package to create a folder structure for a no
 
 ## Colaborators
 
-[Manuel Ortigoza]: https://github.com/doggbmx/
-[Manuel Castelnovo]: https://github.com/manucastelnovo/
-[Santiago Racca]: https://github.com/santiracca/
+<ul>
+  <li><a href="https://github.com/doggbmx/">Manu "El Father" Ortigoza</a></li>
+   <li><a href="https://github.com/manucastelnovo/">Manu "Tiro Largo" Castelnovo</a></li>
+   <li><a href="https://github.com/santiracca/">Santi "El Papa" Racca</a></li>
+</ul>
+
