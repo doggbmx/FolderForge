@@ -4,6 +4,20 @@
 
 This projects pretends to be a npm package to create a folder structure for a node typescript server using expressJS implementing clean architecture
 
+## Example
+Create a file named `index.js` and put this code in the file:
+<pre><code>folderForge = require("folderforge");
+
+folderForge.executeFolder();
+</code></pre>
+
+Then use:`node index.js` aaand good to go!
+
+You can run this command anytime you want to create a new module
+
+#### Warnings!
+##### It will override any file named equally so don't start coding untill you finish your setup!
+
 ## Colaborators
 
 <ul>
@@ -12,3 +26,4 @@ This projects pretends to be a npm package to create a folder structure for a no
    <li><a href="https://github.com/santiracca/">Santi "El Papa" Racca</a></li>
 </ul>
 
+### Happy Coding!
