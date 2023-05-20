@@ -6,7 +6,8 @@ This projects pretends to be a npm package to create a folder structure for a no
 
 ## Example
 
-- Run: `mkdir my-project && cd my-project`
+- Create your project folder: `mkdir my-project && cd my-project`
+- Install Folder Forge: `npm i folderforge`
 - Create a file named `index.js` with `touch index.js` and put this code in the file:
 <pre><code>const FolderForge = require("folderforge");
 
