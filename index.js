@@ -314,6 +314,6 @@ class FolderForge {
   }
 }
 
-FolderForge.executeFolder();
+// FolderForge.executeFolder();
 
 module.exports = FolderForge;
