@@ -80,15 +80,24 @@ function index() {
     const files = [
       {
         name: `src/modules/${moduleNameLowerCase}/data/data_source/pg_data_source.ts`,
-        content: "// IMPLEMENT PG DATA SOURCE",
+        content: `export class PG${moduleNameFirstLetterUpper}sDataSource implements ${moduleNameFirstLetterUpper}DataSource {
+  static create(dataSource: Pool) {
+    if (PGUsersDataSource.instance == null) {
+      PGUsersDataSource.instance = new PGUsersDataSource(dataSource);
+    }
+    return PGUsersDataSource.instance;
+  }
+}`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/data/interfaces/${moduleNameLowerCase}_data_source.ts`,
-        content: "// IMPLEMENT DATA SOURCE INTERFACE",
+        content: `export interface ${moduleNameFirstLetterUpper}DataSource {}`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/domain/models/${moduleNameLowerCase}_model.ts`,
-        content: `export interface ${moduleNameFirstLetterUpper} {}`,
+        content: `export interface ${moduleNameFirstLetterUpper} {};
+export interface Create${moduleNameFirstLetterUpper} extends Omit<${moduleNameFirstLetterUpper}, ""> {};
+export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNameFirstLetterUpper}> {}`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repositories.ts`,
@@ -96,7 +105,18 @@ function index() {
       },
       {
         name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repository_implementation.ts`,
-        content: `export class ${moduleNameFirstLetterUpper}RepositoryImplementation extends ${moduleNameFirstLetterUpper}Repositories{}`,
+        content: `import { ${moduleNameFirstLetterUpper}Repositories } from "./${moduleNameLowerCase}_repositories";
+
+  export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${moduleNameFirstLetterUpper}Repositories{
+    static instance: UserRepositories | null = null;
+
+    static create(dataSource: UserDataSource) {
+      if (UserRepositoryImplementation.instance == null) {
+        UserRepositoryImplementation.instance = new UserRepositoriesImplementation(dataSource);
+      }
+      return UserRepositoriyImplementation.instance;
+          }
+    }`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/presentation/${moduleNameLowerCase}_router.ts`,
@@ -186,5 +206,7 @@ class FolderForge {
     await main();
   }
 }
+
+FolderForge.executeFolder();
 
 module.exports = FolderForge;
