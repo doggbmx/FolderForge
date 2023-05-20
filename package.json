@@ -1,6 +1,6 @@
 {
   "name": "folderforge",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Creates a folder structure for a node typescript server implementing clean architecture",
   "main": "index.js",
   "scripts": {
