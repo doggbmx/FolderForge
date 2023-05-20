@@ -8,12 +8,9 @@ This projects pretends to be a npm package to create a folder structure for a no
 
 - Run: `mkdir my-project && cd my-project`
 - Create a file named `index.js` with `touch index.js` and put this code in the file:
-  <pre><code>
-const FolderForge = require("folderforge");
+<pre><code>const FolderForge = require("folderforge");
 
-FolderForge.executeFolder();
-
-</code></pre>
+FolderForge.executeFolder();</code></pre>
 
 - Then use:`node index.js` aaand good to go!
 
