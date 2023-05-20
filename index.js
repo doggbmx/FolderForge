@@ -26,10 +26,12 @@ const pJson = {
     "@types/node": "^18.11.18",
     nodemon: "^2.0.20",
     "ts-node-dev": "^2.0.0",
+    "@types/pg": "^8.6.6",
   },
   dependencies: {
     express: "^4.18.2",
     "express-validator": "^6.14.3",
+    pg: "^8.8.0",
     folderforge: "^1.0.3",
   },
 };
@@ -37,32 +39,85 @@ const pJson = {
 function createFolderStructure() {
   fs.mkdirSync("src/core/services", { recursive: true });
   fs.mkdirSync("src/core/routing", { recursive: true });
+  // fs.mkdirSync("src/core/routing", { recursive: true });
   fs.mkdirSync("src/core/config", { recursive: true });
   fs.mkdirSync("src/core/middlewares", { recursive: true });
 }
 
+function createFileStructure() {
+  fs.writeFileSync(
+    "src/index.ts",
+    `import express from 'express';
+import { configureRouting } from './core/routing';
+
+const app = express();
+
+app.use(express.json());
+// config del router
+configureRouting(app);
+
+app.listen(8420, () => {
+  console.log('Server running on => 8420');
+});
+`
+  );
+  fs.writeFileSync(
+    "src/core/routing/index.ts",
+    `import express, { Application } from 'express';
+// ADD MISSING IMPORTS
+
+export const configureRouting = (app: Application) => {
+  const router = express.Router();
+  app.use('/api', router);
+  // IMPLEMENT MODULE ROUTER
+}`
+  );
+}
+
 async function setup() {
-  await fs.writeFileSync("package.json", JSON.stringify(pJson), (error) => {
-    if (error) {
-      console.error(error);
-    }
-  });
-
-  await exec("npm install", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error al ejecutar 'npm install': ${error}`);
-      return;
-    }
-    console.log("Salida:", stdout);
-
-    exec("npx tsc --init", (error, stdout, stderr) => {
+  Promise.all([
+    fs.writeFileSync("package.json", JSON.stringify(pJson), (error) => {
       if (error) {
-        console.error(`Error al ejecutar 'npx tsc --init': ${error}`);
+        console.error(error);
+      }
+    }),
+    exec("npm install", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error al ejecutar 'npm install': ${error}`);
         return;
       }
-      console.log("Salida:", stdout);
-    });
-  });
+      console.log("Output:", stdout);
+
+      exec("npx tsc --init", (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error al ejecutar 'npx tsc --init': ${error}`);
+          return;
+        }
+        console.log("Output:", stdout);
+      });
+    }),
+  ]);
+  // await fs.writeFileSync("package.json", JSON.stringify(pJson), (error) => {
+  //   if (error) {
+  //     console.error(error);
+  //   }
+  // });
+
+  // await exec("npm install", (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error al ejecutar 'npm install': ${error}`);
+  //     return;
+  //   }
+  //   console.log("Output:", stdout);
+
+  //   exec("npx tsc --init", (error, stdout, stderr) => {
+  //     if (error) {
+  //       console.error(`Error al ejecutar 'npx tsc --init': ${error}`);
+  //       return;
+  //     }
+  //     console.log("Output:", stdout);
+  //   });
+  // });
 }
 
 function index() {
@@ -80,18 +135,52 @@ function index() {
     const files = [
       {
         name: `src/modules/${moduleNameLowerCase}/data/data_source/pg_data_source.ts`,
-        content: `export class PG${moduleNameFirstLetterUpper}sDataSource implements ${moduleNameFirstLetterUpper}DataSource {
+        content: `import { Pool, PoolClient, QueryResult } from "pg";
+import {${moduleNameFirstLetterUpper}DataSource} from "../interfaces/${moduleNameLowerCase}_data_source";
+
+export class PG${moduleNameFirstLetterUpper}sDataSource implements ${moduleNameFirstLetterUpper}DataSource {
+  private db: Pool;
+  private constructor(db: Pool) {
+    this.db = db;
+  }
+  static instance: PG${moduleNameFirstLetterUpper}sDataSource | null = null;
+
   static create(dataSource: Pool) {
-    if (PGUsersDataSource.instance == null) {
-      PGUsersDataSource.instance = new PGUsersDataSource(dataSource);
+    if (PG${moduleNameFirstLetterUpper}sDataSource.instance == null) {
+      PG${moduleNameFirstLetterUpper}sDataSource.instance = new PG${moduleNameFirstLetterUpper}sDataSource(dataSource);
     }
-    return PGUsersDataSource.instance;
+    return PG${moduleNameFirstLetterUpper}sDataSource.instance;
+  }
+
+  // GENERIC FUNCTION
+  private async callDataBase<T>(
+    query: string,
+    values: any[],
+    callback: (result: QueryResult<any>) => T
+  ): Promise<T> {
+    let client: PoolClient;
+    client = await this.db.connect();
+    try {
+      const response = await client.query(query, values);
+      return callback(response);
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+      throw new DataBaseError(err as Error);
+    } finally {
+      if (client) {
+        client.release();
+      }
+    }
   }
 }`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/data/interfaces/${moduleNameLowerCase}_data_source.ts`,
-        content: `export interface ${moduleNameFirstLetterUpper}DataSource {}`,
+        content: `export interface ${moduleNameFirstLetterUpper}DataSource {
+  // IMPLEMENT METHODS
+}`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/domain/models/${moduleNameLowerCase}_model.ts`,
@@ -100,23 +189,41 @@ export interface Create${moduleNameFirstLetterUpper} extends Omit<${moduleNameFi
 export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNameFirstLetterUpper}> {}`,
       },
       {
-        name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repositories.ts`,
-        content: `export interface ${moduleNameFirstLetterUpper}Repositories {}`,
+        name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repository.ts`,
+        content: `export interface ${moduleNameFirstLetterUpper}Repository {}`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repository_implementation.ts`,
-        content: `import { ${moduleNameFirstLetterUpper}Repositories } from "./${moduleNameLowerCase}_repositories";
+        content: `import { ${moduleNameFirstLetterUpper}Repository } from "./${moduleNameLowerCase}_repository";
+import { ${moduleNameFirstLetterUpper}DataSource } from "../../data/interfaces/${moduleNameLowerCase}_data_source";
 
-  export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${moduleNameFirstLetterUpper}Repositories{
-    static instance: UserRepositories | null = null;
+export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${moduleNameFirstLetterUpper}Repository{
+  private usersDataSource: ${moduleNameFirstLetterUpper}DataSource;
+  private constructor(dataSource: ${moduleNameFirstLetterUpper}DataSource) {
+    this.usersDataSource = dataSource;
+  }
 
-    static create(dataSource: UserDataSource) {
-      if (UserRepositoryImplementation.instance == null) {
-        UserRepositoryImplementation.instance = new UserRepositoriesImplementation(dataSource);
+  static instance: ${moduleNameFirstLetterUpper}RepositoryImplementation | null = null;
+
+  static create(dataSource: ${moduleNameFirstLetterUpper}DataSource) {
+    if (${moduleNameFirstLetterUpper}RepositoryImplementation.instance == null) {
+      ${moduleNameFirstLetterUpper}RepositoryImplementation.instance = new ${moduleNameFirstLetterUpper}RepositoryImplementation(dataSource);
+    }
+    return ${moduleNameFirstLetterUpper}RepositoryImplementation.instance;
+  }
+
+  private async callDataSource<T>(callback: Function): Promise<T> {
+    try {
+      return await callback();
+    } catch (error) {
+      console.log(error);
+      if (error instanceof CustomError) {
+        throw error;
       }
-      return UserRepositoriyImplementation.instance;
-          }
-    }`,
+      throw new GenericError("Users Repositories error.");
+    }
+  }
+  }`,
       },
       {
         name: `src/modules/${moduleNameLowerCase}/presentation/${moduleNameLowerCase}_router.ts`,
@@ -131,7 +238,6 @@ export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNam
         content: "// IMPLEMENT MIDDLEWARES",
       },
     ];
-    createFolderStructure();
     fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain`, {
       recursive: true,
     });
@@ -191,14 +297,15 @@ export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNam
   });
 }
 
-async function execute() {
-  setup().then(() => {
+async function main() {
+  await Promise.all([
+    setup(),
+    createFolderStructure(),
+    createFileStructure(),
+  ]).then((values) => {
+    // console.log("finish a process");
     index();
   });
-}
-
-async function main() {
-  await execute();
 }
 
 class FolderForge {
