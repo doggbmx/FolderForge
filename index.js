@@ -21,9 +21,16 @@ const pJson = {
   license: "ISC",
   devDependencies: {
     typescript: "^5.0.4",
+    "@types/express": "^4.17.15",
+    "ts-node-dev": "^2.0.0",
+    "@types/node": "^18.11.18",
+    nodemon: "^2.0.20",
+    "ts-node-dev": "^2.0.0",
   },
   dependencies: {
     express: "^4.18.2",
+    "express-validator": "^6.14.3",
+    folderforge: "^1.0.3",
   },
 };
 
@@ -139,26 +146,14 @@ function index() {
         fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain/repositories`, {
           recursive: true,
         });
-        // if (fileContent.includes("cosito")) {
-        //   const firstLetter = answer.charAt(0).toUpperCase();
-        //   const className = firstLetter + moduleName.slice(1);
-        //   console.log(`class name => ${className}`);
-        //   newFileContent = fileContent.replace("cosito", className);
-        //   newFilePath = filePath.replace("cosito", moduleName);
-        // }
-        fs.writeFile(
-          // `modules/${moduleName}/domain/models/${moduleName}_model.ts`,
-          filePath,
-          fileContent,
-          (err) => {
-            if (err) {
-              console.log("no pude crear la carpeta porque no se");
-              console.log(err);
-            } else {
-              return;
-            }
+        fs.writeFile(filePath, fileContent, (err) => {
+          if (err) {
+            console.log("no pude crear la carpeta porque no se");
+            console.log(err);
+          } else {
+            return;
           }
-        );
+        });
       } else if (filePath.includes("presentation")) {
         fs.writeFile(filePath, fileContent, (err) => {
           if (err) {
@@ -176,7 +171,20 @@ function index() {
   });
 }
 
-function execute() {
-  setup();
-  index();
+async function execute() {
+  setup().then(() => {
+    index();
+  });
 }
+
+async function main() {
+  await execute();
+}
+
+class FolderForge {
+  static async executeFolder() {
+    await main();
+  }
+}
+
+module.exports = FolderForge;

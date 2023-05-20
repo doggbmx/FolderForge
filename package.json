@@ -1,10 +1,13 @@
 {
   "name": "folderforge",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Creates a folder structure for a node typescript server implementing clean architecture",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "folderforge": "./bin/index.js"
   },
   "repository": {
     "type": "git",
