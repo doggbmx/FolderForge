@@ -198,8 +198,8 @@ export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNam
 import { ${moduleNameFirstLetterUpper}DataSource } from "../../data/interfaces/${moduleNameLowerCase}_data_source";
 
 export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${moduleNameFirstLetterUpper}Repository{
-  private usersDataSource: ${moduleNameFirstLetterUpper}DataSource;
-  private constructor(dataSource: ${moduleNameFirstLetterUpper}DataSource) {
+  private ${moduleNameLowerCase}sDataSource: ${moduleNameFirstLetterUpper}DataSource;
+  private constructor(dataSource: ${moduleNameLowerCase}DataSource) {
     this.usersDataSource = dataSource;
   }
 
