@@ -18,6 +18,10 @@ You can run this command anytime you want to create a new module
 #### Warnings!
 ##### It will override any file named equally so don't start coding untill you finish your setup!
 
+## TODOs
+- Implement Custom Error types
+- Implement `presentation` layer
+
 ## Colaborators
 
 <ul>
