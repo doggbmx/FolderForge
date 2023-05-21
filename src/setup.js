@@ -29,40 +29,45 @@ const pJson = {
   },
 }
 
-function setup(projectName, callback) {
-  fs.writeFile(
-    'package.json',
-    JSON.stringify({ ...pJson, name: projectName }),
-    (error) => {
+const installDependencies = () => {
+  return new Promise((resolve, reject) => {
+    exec('npm install', (error, stdout, stderr) => {
       if (error) {
-        console.error(error)
+        console.error(`Error al ejecutar 'npm install': ${error}`)
+        reject(error)
       }
 
-      console.log('Installing dependencies...')
-      exec('npm install', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error al ejecutar 'npm install': ${error}`)
-          return
-        }
+      console.log(stdout)
+      console.error(stderr)
+      resolve()
+    })
+  })
+}
 
-        console.log(stdout)
-        console.error(stderr)
+const installTypescript = () => {
+  return new Promise((resolve, reject) => {
+    exec('npm install typescript', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error al ejecutar 'npm install typescript': ${error}`)
+        reject(error)
+      }
 
-        exec('npx tsc --init', (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error al ejecutar 'npx tsc --init': ${error}`)
-            return
-          }
-          console.log('Installing typescript...')
+      console.log(stdout)
+      console.error(stderr)
+      resolve()
+    })
+  })
+}
 
-          console.log(stdout)
-          console.error(stderr)
-
-          callback()
-        })
-      })
-    }
+async function setup(projectName) {
+  console.log('Setting up the project...')
+  await createFile(
+    'package.json',
+    JSON.stringify({ ...pJson, name: projectName })
   )
+  await installDependencies()
+  await installTypescript()
+  console.log('Project ready.')
 }
 
 module.exports = setup

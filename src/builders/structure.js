@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
+const { createDirectory, createFile } = require('../utils')
 
-function createFolderStructure() {
-  fs.mkdirSync('src/core/services', { recursive: true })
-  fs.mkdirSync('src/core/routing', { recursive: true })
-  fs.mkdirSync('src/core/config', { recursive: true })
-  fs.mkdirSync('src/core/middlewares', { recursive: true })
-  fs.mkdirSync('src/core/modules', { recursive: true })
-  fs.writeFileSync(
-    'src/index.ts',
-    `import express from 'express';
+async function createFolderStructure() {
+  console.log('Creating project structure...')
+  const promises = [
+    createDirectory('src/core/services'),
+    createDirectory('src/core/routing'),
+    createDirectory('src/core/config'),
+    createDirectory('src/core/middlewares'),
+    createDirectory('src/core/modules'),
+    createFile(
+      'src/index.ts',
+      `import express from 'express';
         import { configureRouting } from './core/routing';
 
         const app = express();
@@ -23,10 +25,10 @@ function createFolderStructure() {
           console.log('Server running on => 8420');
         });
         `
-  )
-  fs.writeFileSync(
-    'src/core/routing/index.ts',
-    `import express, { Application } from 'express';
+    ),
+    createFile(
+      'src/core/config/index.ts',
+      `import express, { Application } from 'express';
         // ADD MISSING IMPORTS
 
         export const configureRouting = (app: Application) => {
@@ -34,7 +36,11 @@ function createFolderStructure() {
           app.use('/api', router);
           // IMPLEMENT MODULE ROUTER
         }`
-  )
+    ),
+  ]
+
+  await Promise.all(promises)
+  console.log('Project structure created.')
 }
 
 module.exports = createFolderStructure

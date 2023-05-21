@@ -1,8 +1,7 @@
 #!/usr/bin/env node
+const { createDirectory, createFile } = require('../utils')
 
-const fs = require('fs')
-
-const createModule = (moduleName, callback) => {
+const createModule = async (moduleName) => {
   const moduleNameLowerCase = moduleName.toLowerCase()
   const firstLetter = moduleName.charAt(0).toUpperCase()
   const moduleNameFirstLetterUpper = firstLetter + moduleNameLowerCase.slice(1)
@@ -112,62 +111,34 @@ export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${
       content: '// IMPLEMENT MIDDLEWARES',
     },
   ]
-  fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain`, {
-    recursive: true,
-  })
-  fs.mkdirSync(`src/modules/${moduleNameLowerCase}/presentation`, {
-    recursive: true,
-  })
-  files.forEach((file, index) => {
+
+  await createDirectory(`src/modules/${moduleNameLowerCase}/data`)
+  await createDirectory(`src/modules/${moduleNameLowerCase}/domain`)
+  await createDirectory(`src/modules/${moduleNameLowerCase}/presentation`)
+  const buildPromises = files.map((file, index) => {
     const filePath = file.name
     const fileContent = file.content
     if (filePath.includes('data')) {
-      fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/data_source`, {
-        recursive: true,
-      })
-      fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/interfaces`, {
-        recursive: true,
-      })
-      fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/utils`, {
-        recursive: true,
-      })
-      fs.writeFileSync(filePath, fileContent, (err) => {
-        if (err) {
-          console.log('no pude crear la carpeta porque no se')
-          console.log(err)
-        } else {
-          return
-        }
-      })
+      return [
+        createDirectory(`src/modules/${moduleNameLowerCase}/data/data_source`),
+        createDirectory(`src/modules/${moduleNameLowerCase}/data/interfaces`),
+        createDirectory(`src/modules/${moduleNameLowerCase}/data/utils`),
+        createFile(filePath, fileContent),
+      ]
     } else if (filePath.includes('domain')) {
-      fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain/models`, {
-        recursive: true,
-      })
-      fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain/repositories`, {
-        recursive: true,
-      })
-      fs.writeFile(filePath, fileContent, (err) => {
-        if (err) {
-          console.log('no pude crear la carpeta porque no se')
-          console.log(err)
-        } else {
-          return
-        }
-      })
+      return [
+        createDirectory(`src/modules/${moduleNameLowerCase}/domain/models`),
+        createDirectory(
+          `src/modules/${moduleNameLowerCase}/domain/repositories`
+        ),
+        createFile(filePath, fileContent),
+      ]
     } else if (filePath.includes('presentation')) {
-      fs.writeFile(filePath, fileContent, (err) => {
-        if (err) {
-          console.log(err)
-        } else {
-          return
-        }
-      })
-    }
-
-    if (index === files.length - 1) {
-      callback()
+      return [createFile(filePath, fileContent)]
     }
   })
+
+  await Promise.all(buildPromises.flat())
 }
 
 module.exports = createModule
