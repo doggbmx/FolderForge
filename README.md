@@ -117,6 +117,11 @@ then you'll be able to add modules using `npx folderforge add-module -n <module-
   </li>
 </ul>
 
+## TODOs
+
+- Implement `CustomError` types
+- Implement `presentation` layer
+
 ## Colaborators
 
 <ul>
