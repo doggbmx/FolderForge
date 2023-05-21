@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "folderforge": "./bin/index.js"
+    "folderforge": "./index.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/doggbmx/FolderForge/issues"
   },
-  "homepage": "https://github.com/doggbmx/FolderForge#readme"
+  "homepage": "https://github.com/doggbmx/FolderForge#readme",
+  "dependencies": {
+    "@types/commander": "^2.12.2",
+    "commander": "^10.0.1"
+  }
 }

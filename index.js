@@ -1,190 +1,59 @@
-const fs = require("fs");
-const readline = require("readline");
-const { exec } = require("child_process");
+#!/usr/bin/env node
 
-//SETUP
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const { program } = require('commander')
+const { checkIfProjectAlreadyStarted, checkIfModuleAlreadyCreated } = require('./src/utils')
+const {createFolderStructure, createModule} = require('./src/builders')
+const setup = require('./src/setup')
 
-const pJson = {
-  name: "GODnpm",
-  version: "1.0.0",
-  description: "",
-  main: "index.js",
-  scripts: {
-    test: 'echo "Error: no test specified" && exit 1',
-  },
-  keywords: [],
-  author: "",
-  license: "ISC",
-  devDependencies: {
-    typescript: "^5.0.4",
-    "@types/express": "^4.17.15",
-    "ts-node-dev": "^2.0.0",
-    "@types/node": "^18.11.18",
-    nodemon: "^2.0.20",
-    "ts-node-dev": "^2.0.0",
-  },
-  dependencies: {
-    express: "^4.18.2",
-    "express-validator": "^6.14.3",
-    folderforge: "^1.0.3",
-  },
+
+const run = () => {
+  program
+    .command('start-project')
+    .description('Starts the project structure.')
+    .action(() => {
+      const projectAlreadyStarted = checkIfProjectAlreadyStarted()
+      if (projectAlreadyStarted) {
+        console.log('Project already started.')
+        process.exit()
+      } else {
+        console.log('Starting project...')
+        const projectName = process.cwd().split('/').pop()
+        console.log('Creating project structure...')
+        createFolderStructure()
+        console.log('Setting up the project...')
+        setup(projectName, () => {
+          console.log('Project ready.')
+          process.exit()
+        })
+      }
+    })
+
+  program
+    .command('add-module')
+    .description('Adds a new module to the project.')
+    .requiredOption('-n, --name <module-name>', 'Module name')
+    .action((args) => {
+      const projectAlreadyStarted = checkIfProjectAlreadyStarted()
+      const moduleName = args.name
+
+      if (!projectAlreadyStarted) {
+        console.log('Project not started.')
+        process.exit()
+      } else {
+        const moduleAlreadyCreated = checkIfModuleAlreadyCreated(moduleName)
+        if (moduleAlreadyCreated) {
+          console.log('Module already created.')
+          process.exit()
+        } else {
+          createModule(moduleName, () => {
+            console.log(`Module ${moduleName} created.`);
+            process.exit()
+          })
+        }
+      }
+    })
+
+    program.parse(process.argv);
 };
 
-function createFolderStructure() {
-  fs.mkdirSync("src/core/services", { recursive: true });
-  fs.mkdirSync("src/core/routing", { recursive: true });
-  fs.mkdirSync("src/core/config", { recursive: true });
-  fs.mkdirSync("src/core/middlewares", { recursive: true });
-}
-
-async function setup() {
-  await fs.writeFileSync("package.json", JSON.stringify(pJson), (error) => {
-    if (error) {
-      console.error(error);
-    }
-  });
-
-  await exec("npm install", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error al ejecutar 'npm install': ${error}`);
-      return;
-    }
-    console.log("Salida:", stdout);
-
-    exec("npx tsc --init", (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error al ejecutar 'npx tsc --init': ${error}`);
-        return;
-      }
-      console.log("Salida:", stdout);
-    });
-  });
-}
-
-function index() {
-  const folderName = process.argv[1].split("/index.js")[0];
-
-  rl.question("What is your new module?:", (answer) => {
-    if (!answer) {
-      console.error("Please specify a folder name");
-      process.exit(1);
-    }
-    const moduleNameLowerCase = answer.toLowerCase();
-    const firstLetter = answer.charAt(0).toUpperCase();
-    const moduleNameFirstLetterUpper =
-      firstLetter + moduleNameLowerCase.slice(1);
-    const files = [
-      {
-        name: `src/modules/${moduleNameLowerCase}/data/data_source/pg_data_source.ts`,
-        content: "// IMPLEMENT PG DATA SOURCE",
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/data/interfaces/${moduleNameLowerCase}_data_source.ts`,
-        content: "// IMPLEMENT DATA SOURCE INTERFACE",
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/domain/models/${moduleNameLowerCase}_model.ts`,
-        content: `export interface ${moduleNameFirstLetterUpper} {}`,
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repositories.ts`,
-        content: `export interface ${moduleNameFirstLetterUpper}Repositories {}`,
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repository_implementation.ts`,
-        content: `export class ${moduleNameFirstLetterUpper}RepositoryImplementation extends ${moduleNameFirstLetterUpper}Repositories{}`,
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/presentation/${moduleNameLowerCase}_router.ts`,
-        content: "// IMPLEMENT ROUTER",
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/presentation/index.ts`,
-        content: "// IMPLEMENT DEPENDENCY INJECTION",
-      },
-      {
-        name: `src/modules/${moduleNameLowerCase}/presentation/${moduleNameLowerCase}_middlewares.ts`,
-        content: "// IMPLEMENT MIDDLEWARES",
-      },
-    ];
-    createFolderStructure();
-    fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain`, {
-      recursive: true,
-    });
-    fs.mkdirSync(`src/modules/${moduleNameLowerCase}/presentation`, {
-      recursive: true,
-    });
-    files.forEach((file) => {
-      const filePath = file.name;
-      const fileContent = file.content;
-      if (filePath.includes("data")) {
-        fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/data_source`, {
-          recursive: true,
-        });
-        fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/interfaces`, {
-          recursive: true,
-        });
-        fs.mkdirSync(`src/modules/${moduleNameLowerCase}/data/utils`, {
-          recursive: true,
-        });
-        fs.writeFileSync(filePath, fileContent, (err) => {
-          if (err) {
-            console.log("no pude crear la carpeta porque no se");
-            console.log(err);
-          } else {
-            return;
-          }
-        });
-      } else if (filePath.includes("domain")) {
-        fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain/models`, {
-          recursive: true,
-        });
-        fs.mkdirSync(`src/modules/${moduleNameLowerCase}/domain/repositories`, {
-          recursive: true,
-        });
-        fs.writeFile(filePath, fileContent, (err) => {
-          if (err) {
-            console.log("no pude crear la carpeta porque no se");
-            console.log(err);
-          } else {
-            return;
-          }
-        });
-      } else if (filePath.includes("presentation")) {
-        fs.writeFile(filePath, fileContent, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            return;
-          }
-        });
-      }
-    });
-
-    console.log(`Folder structure created at ${folderName}`);
-
-    rl.close();
-  });
-}
-
-async function execute() {
-  setup().then(() => {
-    index();
-  });
-}
-
-async function main() {
-  await execute();
-}
-
-class FolderForge {
-  static async executeFolder() {
-    await main();
-  }
-}
-
-module.exports = FolderForge;
+run();
