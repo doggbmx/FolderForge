@@ -13,15 +13,21 @@ const run = () => {
     .command('start-project')
     .description('Starts the project structure.')
     .action(async () => {
-      const projectAlreadyStarted = checkIfProjectAlreadyStarted()
-      if (projectAlreadyStarted) {
-        console.log('Project already built.')
-        process.exit()
-      } else {
-        console.log('Starting project builders...')
-        await createFolderStructure()
-        const projectName = process.cwd().split('/').pop()
-        await setup(projectName)
+      try {
+        const projectAlreadyStarted = checkIfProjectAlreadyStarted()
+        if (projectAlreadyStarted) {
+          console.log('Project already built.')
+          process.exit()
+        } else {
+          console.log('Starting project builders...')
+          await createFolderStructure()
+          const projectName = process.cwd().split('/').pop()
+          await setup(projectName)
+          process.exit()
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
         process.exit()
       }
     })
@@ -51,6 +57,8 @@ const run = () => {
         }
       } catch (error) {
         console.log(error)
+      } finally {
+        process.exit()
       }
     })
 

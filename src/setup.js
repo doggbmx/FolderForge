@@ -1,6 +1,8 @@
 const fs = require('fs')
 const { exec } = require('child_process')
 
+const { createFile } = require('./utils')
+
 const pJson = {
   name: '',
   version: '1.0.0',
@@ -60,14 +62,18 @@ const installTypescript = () => {
 }
 
 const setup = async (projectName) => {
-  console.log('Setting up the project...')
-  await createFile(
-    'package.json',
-    JSON.stringify({ ...pJson, name: projectName })
-  )
-  await installDependencies()
-  await installTypescript()
-  console.log('Project ready.')
+  try {
+    console.log('Setting up the project...')
+    await createFile(
+      'package.json',
+      JSON.stringify({ ...pJson, name: projectName })
+    )
+    await installDependencies()
+    await installTypescript()
+    console.log('Project ready.')
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = setup

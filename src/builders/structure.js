@@ -27,15 +27,15 @@ const createFolderStructure = async () => {
         `
     ),
     createFile(
-      'src/core/config/index.ts',
+      'src/core/routing/index.ts',
       `import express, { Application } from 'express';
-        // ADD MISSING IMPORTS
+// ADD MISSING IMPORTS
 
-        export const configureRouting = (app: Application) => {
-          const router = express.Router();
-          app.use('/api', router);
-          // IMPLEMENT MODULE ROUTER
-        }`
+export const configureRouting = (app: Application) => {
+  const router = express.Router();
+  app.use('/api', router);
+  // IMPLEMENT MODULE ROUTER
+}`
     ),
   ]
 
