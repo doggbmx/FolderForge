@@ -59,7 +59,7 @@ const installTypescript = () => {
   })
 }
 
-async function setup(projectName) {
+const setup = async (projectName) => {
   console.log('Setting up the project...')
   await createFile(
     'package.json',

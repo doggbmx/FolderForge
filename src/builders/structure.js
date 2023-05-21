@@ -2,7 +2,7 @@
 
 const { createDirectory, createFile } = require('../utils')
 
-async function createFolderStructure() {
+const createFolderStructure = async () => {
   console.log('Creating project structure...')
   const promises = [
     createDirectory('src/core/services'),
