@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 const { program } = require('commander')
-const { checkIfProjectAlreadyStarted, checkIfModuleAlreadyCreated } = require('./src/utils')
-const {createFolderStructure, createModule} = require('./src/builders')
+const {
+  checkIfProjectAlreadyStarted,
+  checkIfModuleAlreadyCreated,
+} = require('./src/utils')
+const { createFolderStructure, createModule } = require('./src/builders')
 const setup = require('./src/setup')
-
 
 const run = () => {
   program
@@ -46,14 +48,14 @@ const run = () => {
           process.exit()
         } else {
           createModule(moduleName, () => {
-            console.log(`Module ${moduleName} created.`);
+            console.log(`Module ${moduleName} created.`)
             process.exit()
           })
         }
       }
     })
 
-    program.parse(process.argv);
-};
+  program.parse(process.argv)
+}
 
-run();
+run()

@@ -5,16 +5,19 @@
 This project pretends to be an npm package to create a folder structure for a node typescript server using expressJS implementing clean architecture
 
 ## How to use it
-  run `npx folderforge start-project` to create the base structure of the project
-  then you'll be able to add modules using `npx folderforge add-module -n <module-name>`
+
+run `npx folderforge start-project` to create the base structure of the project
+then you'll be able to add modules using `npx folderforge add-module -n <module-name>`
 
 ## Example
-  1. `npx folderforge start-project`
-  2. `npx folderforge add-module -n users`
-  3. `npx folderforge add-module -n products`
-  4. `npx folderforge add-module -n orders`
+
+1. `npx folderforge start-project`
+2. `npx folderforge add-module -n users`
+3. `npx folderforge add-module -n products`
+4. `npx folderforge add-module -n orders`
 
 ## Folder Structure
+
 #### This will be the result
 
 <ul>

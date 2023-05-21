@@ -1,28 +1,27 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
 const checkIfFolderAlreadyExists = (folderName) => {
-  const folderPath = path.join(process.cwd(), folderName);
+  const folderPath = path.join(process.cwd(), folderName)
 
-  return fs.existsSync(folderPath);
+  return fs.existsSync(folderPath)
 }
 
 const checkIfProjectAlreadyStarted = () => {
-  const folderName = 'src';
+  const folderName = 'src'
 
-  return checkIfFolderAlreadyExists(folderName);
-  
+  return checkIfFolderAlreadyExists(folderName)
 }
 
 const checkIfModuleAlreadyCreated = (moduleName) => {
-  const folderName = `src/modules/${moduleName}`;
+  const folderName = `src/modules/${moduleName}`
 
-  return checkIfFolderAlreadyExists(folderName);
+  return checkIfFolderAlreadyExists(folderName)
 }
 
 module.exports = {
   checkIfProjectAlreadyStarted,
-  checkIfModuleAlreadyCreated
+  checkIfModuleAlreadyCreated,
 }
