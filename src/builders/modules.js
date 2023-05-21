@@ -59,8 +59,8 @@ export class PG${moduleNameFirstLetterUpper}sDataSource implements ${moduleNameF
     {
       name: `src/modules/${moduleNameLowerCase}/domain/models/${moduleNameLowerCase}_model.ts`,
       content: `export interface ${moduleNameFirstLetterUpper} {};
-  export interface Create${moduleNameFirstLetterUpper} extends Omit<${moduleNameFirstLetterUpper}, ""> {};
-  export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNameFirstLetterUpper}> {}`,
+export interface Create${moduleNameFirstLetterUpper} extends Omit<${moduleNameFirstLetterUpper}, ""> {};
+export interface Update${moduleNameFirstLetterUpper} extends Partial<${moduleNameFirstLetterUpper}> {}`,
     },
     {
       name: `src/modules/${moduleNameLowerCase}/domain/repositories/${moduleNameLowerCase}_repository.ts`,
