@@ -199,7 +199,7 @@ import { ${moduleNameFirstLetterUpper}DataSource } from "../../data/interfaces/$
 
 export class ${moduleNameFirstLetterUpper}RepositoryImplementation implements ${moduleNameFirstLetterUpper}Repository{
   private ${moduleNameLowerCase}sDataSource: ${moduleNameFirstLetterUpper}DataSource;
-  private constructor(dataSource: ${moduleNameLowerCase}DataSource) {
+  private constructor(dataSource: ${moduleNameFirstLetterUpper}DataSource) {
     this.usersDataSource = dataSource;
   }
 
@@ -314,6 +314,6 @@ class FolderForge {
   }
 }
 
-// FolderForge.executeFolder();
+FolderForge.executeFolder();
 
 module.exports = FolderForge;
