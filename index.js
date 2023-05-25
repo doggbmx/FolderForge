@@ -65,4 +65,4 @@ const run = () => {
   program.parse(process.argv)
 }
 
-run()
+run();
