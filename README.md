@@ -128,6 +128,7 @@ then you'll be able to add modules using `npx folderforge add-module -n <module-
   <li><a href="https://github.com/doggbmx/">Manu "El Father" Ortigoza</a></li>
    <li><a href="https://github.com/manucastelnovo/">Manu "Tiro Largo" Castelnovo</a></li>
    <li><a href="https://github.com/santiracca/">Santi "El Papa" Racca</a></li>
+    <li><a href="https://github.com/fermellone/">Fer "Chorizo Misionero" Mellone</a></li>
 </ul>
 
 ### Happy Coding!
