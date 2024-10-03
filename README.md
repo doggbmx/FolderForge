@@ -56,7 +56,7 @@ then you'll be able to add modules using `npx folderforge add-module -n <module-
                                                   </li>
                                                   <li>interfaces
                                                       <ul>
-                                                          <li>customer_data_source.ts</li>
+                                                          <li>users_data_source.ts</li>
                                                       </ul>
                                                   </li>
                                                   <li>utils</li>
@@ -69,13 +69,13 @@ then you'll be able to add modules using `npx folderforge add-module -n <module-
                                               <ul>
                                                   <li>models
                                                       <ul>
-                                                          <li>customer_model.ts</li>
+                                                          <li>users_model.ts</li>
                                                       </ul>
                                                   </li>
                                                   <li>repositories
                                                       <ul>
-                                                          <li>customer_repositories.ts</li>
-                                                          <li>customer_repository_implementation.ts</li>
+                                                          <li>users_repository.ts</li>
+                                                          <li>users_repository_implementation.ts</li>
                                                       </ul>
                                                   </li>
                                               </ul>
@@ -85,8 +85,8 @@ then you'll be able to add modules using `npx folderforge add-module -n <module-
                                           <details>
                                               <summary>presentation</summary>
                                               <ul>
-                                                  <li>customer_middlewares.ts</li>
-                                                  <li>customer_router.ts</li>
+                                                  <li>users_middlewares.ts</li>
+                                                  <li>users_router.ts</li>
                                                   <li>index.ts</li>
                                               </ul>
                                           </details>
